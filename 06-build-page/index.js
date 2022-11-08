@@ -23,18 +23,23 @@ async function buildDistFolder(dirname) {
 
 async function replaceTags(tempPath, indexHtml, componentsPath) {
   const transformedData = fs.createWriteStream(indexHtml);
-  let templateContent =await fsPr.readFile(tempPath);
-  
+  let templateContent = await fsPr.readFile(tempPath);
+
   for (const file of await fsPr.readdir(componentsPath, {  withFileTypes: true})) {
     if (file.isFile() && path.extname(file.name) === HTML_EXT) {
       const _path = path.resolve(componentsPath, file.name);
       let data = await fsPr.readFile(_path, "utf8");
-      const tag = `{{${file.name.split(".")[0]}}}`;
+      const tag = `{{${getTag(file.name)}}}`;
       templateContent = templateContent.toString().replace(tag, data.toString());
-
+      
     }
   }
   transformedData.write(templateContent);
+}
+
+function getTag(fullName) {
+  var extension = path.extname(fullName);
+  return path.basename(fullName, extension);
 }
 
 function copyFile(filePath, outputPath) {
