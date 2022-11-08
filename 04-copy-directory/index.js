@@ -10,7 +10,7 @@ async function cleanCopiedFolder(folderPath) {
   }
 }
 async function copyFolder(initFolderPath, copiedFolderPath) {
-  fsPr.access(copiedFolderPath).catch(async () => {
+  await fsPr.access(copiedFolderPath).catch(async () => {
     await fsPr.mkdir(copiedFolderPath, { recursive: true });
   });
   await cleanCopiedFolder(copiedFolderPath);
